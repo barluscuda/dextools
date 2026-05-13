@@ -64,47 +64,78 @@ func (b *Bedrock) ServerStatus(host string, port int) (*BedrockServerStatusStruc
 
 	ping := time.Since(start)
 
-	if n < 35 || buf[0] != 0x1c {
+	return parseBedrockStatusResponse(buf[:n], ping)
+}
+
+func parseBedrockStatusResponse(packet []byte, ping time.Duration) (*BedrockServerStatusStruct, error) {
+	if len(packet) < 35 || packet[0] != 0x1c {
 		return nil, fmt.Errorf("invalid response")
 	}
 
 	offset := 1 + 8 + 8 + 16
-
-	if offset+2 > n {
+	if offset+2 > len(packet) {
 		return nil, fmt.Errorf("invalid packet")
 	}
 
-	strLen := binary.BigEndian.Uint16(buf[offset : offset+2])
+	strLen := int(binary.BigEndian.Uint16(packet[offset : offset+2]))
 	offset += 2
-
-	if int(offset)+int(strLen) > n {
+	if offset+strLen > len(packet) {
 		return nil, fmt.Errorf("invalid string length")
 	}
 
-	raw := string(buf[offset : offset+int(strLen)])
-	parts := bytes.Split([]byte(raw), []byte(";"))
-
+	parts := bytes.Split(packet[offset:offset+strLen], []byte(";"))
 	if len(parts) < 12 {
 		return nil, fmt.Errorf("invalid bedrock response")
 	}
+	if string(parts[0]) != "MCPE" {
+		return nil, fmt.Errorf("invalid edition: %q", string(parts[0]))
+	}
 
-	parseInt := func(b []byte) int {
-		v, _ := strconv.Atoi(string(b))
-		return v
+	parseInt := func(field string, raw []byte) (int, error) {
+		value, err := strconv.Atoi(string(raw))
+		if err != nil {
+			return 0, fmt.Errorf("invalid %s: %q", field, string(raw))
+		}
+		return value, nil
+	}
+
+	protocol, err := parseInt("protocol", parts[2])
+	if err != nil {
+		return nil, err
+	}
+	playersOnline, err := parseInt("players online", parts[4])
+	if err != nil {
+		return nil, err
+	}
+	playersMax, err := parseInt("players max", parts[5])
+	if err != nil {
+		return nil, err
+	}
+	gameModeNumeric, err := parseInt("game mode numeric", parts[9])
+	if err != nil {
+		return nil, err
+	}
+	ipv4Port, err := parseInt("IPv4 port", parts[10])
+	if err != nil {
+		return nil, err
+	}
+	ipv6Port, err := parseInt("IPv6 port", parts[11])
+	if err != nil {
+		return nil, err
 	}
 
 	return &BedrockServerStatusStruct{
 		Ping:            ping,
 		MOTD:            string(parts[1]),
-		Protocol:        parseInt(parts[2]),
+		Protocol:        protocol,
 		Version:         string(parts[3]),
-		PlayersOnline:   parseInt(parts[4]),
-		PlayersMax:      parseInt(parts[5]),
+		PlayersOnline:   playersOnline,
+		PlayersMax:      playersMax,
 		ServerID:        string(parts[6]),
 		LevelName:       string(parts[7]),
 		GameMode:        string(parts[8]),
-		GameModeNumeric: parseInt(parts[9]),
-		IPv4Port:        parseInt(parts[10]),
-		IPv6Port:        parseInt(parts[11]),
+		GameModeNumeric: gameModeNumeric,
+		IPv4Port:        ipv4Port,
+		IPv6Port:        ipv6Port,
 	}, nil
 }
