@@ -1,0 +1,53 @@
+package wenowa
+
+import (
+	"strings"
+	"testing"
+)
+
+func TestResolveBaseURL(t *testing.T) {
+	t.Setenv("WENOVA_API_URL", "")
+	if got := ResolveBaseURL(""); got != DefaultBaseURL {
+		t.Fatalf("expected default base url %q, got %q", DefaultBaseURL, got)
+	}
+
+	t.Setenv("WENOVA_API_URL", "https://example.com/")
+	if got := ResolveBaseURL(""); got != "https://example.com" {
+		t.Fatalf("expected env base url to be trimmed, got %q", got)
+	}
+
+	if got := ResolveBaseURL(" https://override.test/ "); got != "https://override.test" {
+		t.Fatalf("expected override base url to win, got %q", got)
+	}
+}
+
+func TestScriptID(t *testing.T) {
+	tests := []struct {
+		input string
+		want  int64
+	}{
+		{input: "", want: 0},
+		{input: "abc", want: 0},
+		{input: "-5", want: 0},
+		{input: "42", want: 42},
+		{input: " 8 ", want: 8},
+	}
+
+	for _, tt := range tests {
+		if got := ScriptID(tt.input); got != tt.want {
+			t.Fatalf("ScriptID(%q) = %d, want %d", tt.input, got, tt.want)
+		}
+	}
+}
+
+func TestErrorFromResponseBody(t *testing.T) {
+	err := ErrorFromResponseBody([]byte(`{"message":"bad request"}`), 400, "fallback")
+	if err == nil || err.Error() != "bad request (HTTP 400)" {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	err = ErrorFromResponseBody([]byte(`not-json`), 500, "fallback")
+	if err == nil || !strings.Contains(err.Error(), "fallback (HTTP 500)") {
+		t.Fatalf("unexpected fallback error: %v", err)
+	}
+}
