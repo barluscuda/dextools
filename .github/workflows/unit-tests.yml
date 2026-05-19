@@ -20,4 +20,7 @@ jobs:
       - name: Run unit tests
         env:
           WENOWA_TOKEN: ${{ secrets.WENOWA_TOKEN }}
+          WENOWA_DEMO_PHONE_NUMBER: ${{ secrets.WENOWA_DEMO_PHONE_NUMBER }}
+          WENOWA_DEMO_HEADER: ${{ secrets.WENOWA_DEMO_HEADER }}
+          WENOWA_DEMO_MESSAGE: ${{ secrets.WENOWA_DEMO_MESSAGE }}
         run: go test ./...

@@ -169,4 +169,13 @@ Run all tests with:
 go test ./...
 ```
 
-The live Wenowa integration test reads `WENOWA_TOKEN`. If it is not set, the test is skipped. In GitHub Actions, provide it as a repository secret with the same name.
+The live Wenowa address test reads `WENOWA_TOKEN`. If it is not set, the test is skipped.
+
+The live Wenowa service API test reads:
+
+- `WENOWA_TOKEN`
+- `WENOWA_DEMO_PHONE_NUMBER`
+- `WENOWA_DEMO_HEADER` (optional)
+- `WENOWA_DEMO_MESSAGE` (optional)
+
+If `WENOWA_TOKEN` or `WENOWA_DEMO_PHONE_NUMBER` is missing, the service test is skipped. In GitHub Actions, provide these values as repository secrets with the same names.

@@ -67,3 +67,6 @@ Some live integration tests read repository secrets through environment variable
 - `MINECRAFT_MCSERVER_DEMO_IP`
 - `MINECRAFT_MCSERVER_DEMO_PORT`
 - `WENOWA_TOKEN`
+- `WENOWA_DEMO_PHONE_NUMBER`
+- `WENOWA_DEMO_HEADER`
+- `WENOWA_DEMO_MESSAGE`

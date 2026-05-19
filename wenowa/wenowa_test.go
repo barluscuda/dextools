@@ -2,6 +2,7 @@ package wenowa
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -73,5 +74,44 @@ func TestGetProvincesLive(t *testing.T) {
 	}
 	if result == nil {
 		t.Fatal("expected province response, got nil")
+	}
+}
+
+func TestSendOtpLive(t *testing.T) {
+	token := strings.TrimSpace(os.Getenv("WENOWA_TOKEN"))
+	if token == "" {
+		t.Skip("skipping live Wenowa service test: WENOWA_TOKEN is not set")
+	}
+
+	phoneNumber := strings.TrimSpace(os.Getenv("WENOWA_DEMO_PHONE_NUMBER"))
+	if phoneNumber == "" {
+		t.Skip("skipping live Wenowa service test: WENOWA_DEMO_PHONE_NUMBER is not set")
+	}
+
+	header := strings.TrimSpace(os.Getenv("WENOWA_DEMO_HEADER"))
+	if header == "" {
+		header = "WNV-OTP"
+	}
+
+	message := strings.TrimSpace(os.Getenv("WENOWA_DEMO_MESSAGE"))
+	if message == "" {
+		message = fmt.Sprintf("Code: %d", time.Now().Unix()%1000000)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	result, err := SendOtp(ctx, SendOtpRequest{
+		Header:      header,
+		PhoneNumber: phoneNumber,
+		Message:     message,
+		Token:       token,
+		UsePackage:  true,
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result == nil {
+		t.Fatal("expected OTP response, got nil")
 	}
 }
