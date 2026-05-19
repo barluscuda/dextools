@@ -1,4 +1,4 @@
-package wenowa
+package wenova
 
 import (
 	"context"
@@ -83,10 +83,10 @@ func assertPositiveID(name string, id int64) error {
 
 // GetProvinces GET /npm-provinces?key=&kw=&lang=
 func GetProvinces(ctx context.Context, opts Options) (any, error) {
-	return Wenowa{}.GetProvinces(ctx, opts)
+	return Wenova{}.GetProvinces(ctx, opts)
 }
 
-func (Wenowa) GetProvinces(ctx context.Context, opts Options) (any, error) {
+func (Wenova) GetProvinces(ctx context.Context, opts Options) (any, error) {
 	if err := assertPluginKey(opts.PluginKey); err != nil {
 		return nil, err
 	}
@@ -97,10 +97,10 @@ func (Wenowa) GetProvinces(ctx context.Context, opts Options) (any, error) {
 
 // GetProvinceById GET /npm-provinces/:id?key=&lang=
 func GetProvinceById(ctx context.Context, id int64, opts Options) (any, error) {
-	return Wenowa{}.GetProvinceById(ctx, id, opts)
+	return Wenova{}.GetProvinceById(ctx, id, opts)
 }
 
-func (Wenowa) GetProvinceById(ctx context.Context, id int64, opts Options) (any, error) {
+func (Wenova) GetProvinceById(ctx context.Context, id int64, opts Options) (any, error) {
 	if err := assertPluginKey(opts.PluginKey); err != nil {
 		return nil, err
 	}
@@ -114,10 +114,10 @@ func (Wenowa) GetProvinceById(ctx context.Context, id int64, opts Options) (any,
 
 // GetDistrictsByProvince GET /npm-districts/by-province/:provinceId?key=&kw=&lang=
 func GetDistrictsByProvince(ctx context.Context, provinceID int64, opts Options) (any, error) {
-	return Wenowa{}.GetDistrictsByProvince(ctx, provinceID, opts)
+	return Wenova{}.GetDistrictsByProvince(ctx, provinceID, opts)
 }
 
-func (Wenowa) GetDistrictsByProvince(ctx context.Context, provinceID int64, opts Options) (any, error) {
+func (Wenova) GetDistrictsByProvince(ctx context.Context, provinceID int64, opts Options) (any, error) {
 	if err := assertPluginKey(opts.PluginKey); err != nil {
 		return nil, err
 	}
@@ -131,10 +131,10 @@ func (Wenowa) GetDistrictsByProvince(ctx context.Context, provinceID int64, opts
 
 // GetDistrictById GET /npm-districts/:id?key=&lang=
 func GetDistrictById(ctx context.Context, id int64, opts Options) (any, error) {
-	return Wenowa{}.GetDistrictById(ctx, id, opts)
+	return Wenova{}.GetDistrictById(ctx, id, opts)
 }
 
-func (Wenowa) GetDistrictById(ctx context.Context, id int64, opts Options) (any, error) {
+func (Wenova) GetDistrictById(ctx context.Context, id int64, opts Options) (any, error) {
 	if err := assertPluginKey(opts.PluginKey); err != nil {
 		return nil, err
 	}
@@ -148,10 +148,10 @@ func (Wenowa) GetDistrictById(ctx context.Context, id int64, opts Options) (any,
 
 // GetVillagesByDistrict GET /npm-vilages/by-district/:districtId?key=&kw=&lang=
 func GetVillagesByDistrict(ctx context.Context, districtID int64, opts Options) (any, error) {
-	return Wenowa{}.GetVillagesByDistrict(ctx, districtID, opts)
+	return Wenova{}.GetVillagesByDistrict(ctx, districtID, opts)
 }
 
-func (Wenowa) GetVillagesByDistrict(ctx context.Context, districtID int64, opts Options) (any, error) {
+func (Wenova) GetVillagesByDistrict(ctx context.Context, districtID int64, opts Options) (any, error) {
 	if err := assertPluginKey(opts.PluginKey); err != nil {
 		return nil, err
 	}
@@ -165,10 +165,10 @@ func (Wenowa) GetVillagesByDistrict(ctx context.Context, districtID int64, opts 
 
 // GetVillageById GET /npm-vilages/:id?key=&lang=
 func GetVillageById(ctx context.Context, id int64, opts Options) (any, error) {
-	return Wenowa{}.GetVillageById(ctx, id, opts)
+	return Wenova{}.GetVillageById(ctx, id, opts)
 }
 
-func (Wenowa) GetVillageById(ctx context.Context, id int64, opts Options) (any, error) {
+func (Wenova) GetVillageById(ctx context.Context, id int64, opts Options) (any, error) {
 	if err := assertPluginKey(opts.PluginKey); err != nil {
 		return nil, err
 	}

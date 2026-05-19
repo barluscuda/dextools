@@ -1,6 +1,6 @@
-# wenowa
+# wenova
 
-`wenowa` provides Go helpers for calling Wenova microservice APIs from the `dextools` module.
+`wenova` provides Go helpers for calling Wenova microservice APIs from the `dextools` module.
 
 ## Quick Start
 
@@ -13,14 +13,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/barluscuda/dextools/wenowa"
+	"github.com/barluscuda/dextools/wenova"
 )
 
 func main() {
 	ctx := context.Background()
-	client := wenowa.Wenowa{}
+	client := wenova.Wenova{}
 
-	otpResult, err := client.SendOtp(ctx, wenowa.SendOtpRequest{
+	otpResult, err := client.SendOtp(ctx, wenova.SendOtpRequest{
 		Header:      "WNV-OTP",
 		PhoneNumber: "2012345678",
 		Message:     "Code: 123456",
@@ -31,7 +31,7 @@ func main() {
 		panic(err)
 	}
 
-	provinces, err := client.GetProvinces(ctx, wenowa.Options{
+	provinces, err := client.GetProvinces(ctx, wenova.Options{
 		PluginKey: "your-plugin-key",
 		Lang:      "en",
 	})
@@ -73,15 +73,15 @@ WENOVA_API_URL=https://apimicroservices.wenova.fun
 
 ## Structure
 
-Like `envtools`, `wenowa` uses a flat package structure:
+Like `envtools`, `wenova` uses a flat package structure:
 
-- `wenowa.go` defines the package type
+- `wenova.go` defines the package type
 - `apiclient.go` holds shared base URL and error helpers
 - `smsotp.go` contains SMS and OTP helpers
 - `address.go` contains address lookup helpers
-- `wenowa_test.go` covers shared behavior
+- `wenova_test.go` covers shared behavior
 
-You can call helpers either from package-level functions or from a `Wenowa` value.
+You can call helpers either from package-level functions or from a `Wenova` value.
 
 ## SMS OTP
 
@@ -99,7 +99,7 @@ If both are missing, it returns an error.
 ### Example
 
 ```go
-result, err := wenowa.SendOtp(ctx, wenowa.SendOtpRequest{
+result, err := wenova.SendOtp(ctx, wenova.SendOtpRequest{
 	Header:      "WNV-OTP",
 	PhoneNumber: "2012345678",
 	Message:     "Code: 123456",
@@ -139,7 +139,7 @@ The address helpers fetch Wenova Link location data for provinces, districts, an
 ### Example
 
 ```go
-districts, err := wenowa.GetDistrictsByProvince(ctx, 1, wenowa.Options{
+districts, err := wenova.GetDistrictsByProvince(ctx, 1, wenova.Options{
 	PluginKey: "your-plugin-key",
 	KW:        "chan",
 	Lang:      "en",
@@ -169,13 +169,13 @@ Run all tests with:
 go test ./...
 ```
 
-The live Wenowa address test reads `WENOWA_TOKEN`. If it is not set, the test is skipped.
+The live Wenova address test reads `WENOVA_PLUGIN_KEY`. If it is not set, the test is skipped.
 
-The live Wenowa service API test reads:
+The live Wenova service API test reads:
 
-- `WENOWA_TOKEN`
-- `WENOWA_DEMO_PHONE_NUMBER`
-- `WENOWA_DEMO_HEADER` (optional)
-- `WENOWA_DEMO_MESSAGE` (optional)
+- `WENOVA_TOKEN`
+- `WENOVA_DEMO_PHONE_NUMBER`
+- `WENOVA_DEMO_HEADER` (optional)
+- `WENOVA_DEMO_MESSAGE` (optional)
 
-If `WENOWA_TOKEN` or `WENOWA_DEMO_PHONE_NUMBER` is missing, the service test is skipped. In GitHub Actions, provide these values as repository secrets with the same names.
+If `WENOVA_TOKEN` or `WENOVA_DEMO_PHONE_NUMBER` is missing, the service test is skipped. In GitHub Actions, provide these values as repository secrets with the same names.

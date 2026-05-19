@@ -1,4 +1,4 @@
-package wenowa
+package wenova
 
 import (
 	"context"
@@ -8,6 +8,10 @@ import (
 	"testing"
 	"time"
 )
+
+func requiredTrimmedEnv(key string) string {
+	return strings.TrimSpace(os.Getenv(key))
+}
 
 func TestResolveBaseURL(t *testing.T) {
 	t.Setenv("WENOVA_API_URL", "")
@@ -57,16 +61,16 @@ func TestErrorFromResponseBody(t *testing.T) {
 }
 
 func TestGetProvincesLive(t *testing.T) {
-	token := strings.TrimSpace(os.Getenv("WENOWA_TOKEN"))
-	if token == "" {
-		t.Skip("skipping live Wenowa test: WENOWA_TOKEN is not set")
+	pluginKey := requiredTrimmedEnv("WENOVA_PLUGIN_KEY")
+	if pluginKey == "" {
+		t.Skip("skipping live Wenova address test: WENOVA_PLUGIN_KEY is not set")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	result, err := GetProvinces(ctx, Options{
-		PluginKey: token,
+		PluginKey: pluginKey,
 		Lang:      "en",
 	})
 	if err != nil {
@@ -78,22 +82,22 @@ func TestGetProvincesLive(t *testing.T) {
 }
 
 func TestSendOtpLive(t *testing.T) {
-	token := strings.TrimSpace(os.Getenv("WENOWA_TOKEN"))
+	token := requiredTrimmedEnv("WENOVA_TOKEN")
 	if token == "" {
-		t.Skip("skipping live Wenowa service test: WENOWA_TOKEN is not set")
+		t.Skip("skipping live Wenova service test: WENOVA_TOKEN is not set")
 	}
 
-	phoneNumber := strings.TrimSpace(os.Getenv("WENOWA_DEMO_PHONE_NUMBER"))
+	phoneNumber := requiredTrimmedEnv("WENOVA_DEMO_PHONE_NUMBER")
 	if phoneNumber == "" {
-		t.Skip("skipping live Wenowa service test: WENOWA_DEMO_PHONE_NUMBER is not set")
+		t.Skip("skipping live Wenova service test: WENOVA_DEMO_PHONE_NUMBER is not set")
 	}
 
-	header := strings.TrimSpace(os.Getenv("WENOWA_DEMO_HEADER"))
+	header := requiredTrimmedEnv("WENOVA_DEMO_HEADER")
 	if header == "" {
 		header = "WNV-OTP"
 	}
 
-	message := strings.TrimSpace(os.Getenv("WENOWA_DEMO_MESSAGE"))
+	message := requiredTrimmedEnv("WENOVA_DEMO_MESSAGE")
 	if message == "" {
 		message = fmt.Sprintf("Code: %d", time.Now().Unix()%1000000)
 	}

@@ -1,4 +1,4 @@
-package wenowa
+package wenova
 
 import (
 	"encoding/json"
@@ -21,7 +21,7 @@ func ResolveBaseURL(override string) string {
 }
 
 // ResolveBaseURL returns override if set, else WENOVA_API_URL, else DefaultBaseURL.
-func (Wenowa) ResolveBaseURL(override string) string {
+func (Wenova) ResolveBaseURL(override string) string {
 	return ResolveBaseURL(override)
 }
 

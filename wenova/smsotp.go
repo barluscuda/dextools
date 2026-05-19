@@ -1,4 +1,4 @@
-package wenowa
+package wenova
 
 import (
 	"bytes"
@@ -26,10 +26,10 @@ type SendOtpRequest struct {
 
 // SendOtp POSTs to /sms/package and returns the decoded JSON body.
 func SendOtp(ctx context.Context, req SendOtpRequest) (any, error) {
-	return Wenowa{}.SendOtp(ctx, req)
+	return Wenova{}.SendOtp(ctx, req)
 }
 
-func (Wenowa) SendOtp(ctx context.Context, req SendOtpRequest) (any, error) {
+func (Wenova) SendOtp(ctx context.Context, req SendOtpRequest) (any, error) {
 	hasToken := strings.TrimSpace(req.Token) != ""
 	hasScript := req.ScriptID > 0
 	if !hasToken && !hasScript {
@@ -103,6 +103,6 @@ func ScriptID(s string) int64 {
 }
 
 // ScriptID parses a positive script id from string.
-func (Wenowa) ScriptID(s string) int64 {
+func (Wenova) ScriptID(s string) int64 {
 	return ScriptID(s)
 }
