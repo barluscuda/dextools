@@ -23,4 +23,6 @@ jobs:
           WENOVA_DEMO_PHONE_NUMBER: ${{ secrets.WENOVA_DEMO_PHONE_NUMBER }}
           WENOVA_DEMO_HEADER: ${{ secrets.WENOVA_DEMO_HEADER }}
           WENOVA_DEMO_MESSAGE: ${{ secrets.WENOVA_DEMO_MESSAGE }}
+          MINECRAFT_MCSERVER_DEMO_IP: ${{ secrets.MINECRAFT_MCSERVER_DEMO_IP }}
+          MINECRAFT_MCSERVER_DEMO_PORT: ${{ secrets.MINECRAFT_MCSERVER_DEMO_PORT }}
         run: go test ./...
