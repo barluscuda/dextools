@@ -1,3 +1,7 @@
 package wenova
 
-type Wenova struct{}
+const DefaultBaseURL = "https://apimicroservices.wenova.fun"
+
+type Wenova struct {
+	BaseUrl string
+}

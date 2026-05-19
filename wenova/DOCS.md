@@ -18,29 +18,21 @@ import (
 
 func main() {
 	ctx := context.Background()
-	client := wenova.Wenova{}
+	client := wenova.Wenova{
+		BaseUrl: "https://apimicroservices.wenova.fun",
+	}
 
-	otpResult, err := client.SendOtp(ctx, wenova.SendOtpRequest{
+	smsResult, err := client.SendSMS(ctx, wenova.SendSMSRequest{
 		Header:      "WNV-OTP",
 		PhoneNumber: "2012345678",
 		Message:     "Code: 123456",
 		Token:       "your-token",
-		UsePackage:  true,
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	provinces, err := client.GetProvinces(ctx, wenova.Options{
-		PluginKey: "your-plugin-key",
-		Lang:      "en",
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(otpResult)
-	fmt.Println(provinces)
+	fmt.Println(smsResult)
 }
 ```
 
@@ -48,114 +40,42 @@ func main() {
 
 The package currently supports:
 
-- `SendOtp`
-- `ScriptID`
-- `GetProvinces`
-- `GetProvinceById`
-- `GetDistrictsByProvince`
-- `GetDistrictById`
-- `GetVillagesByDistrict`
-- `GetVillageById`
+- `SendSMS`
 
 ## Configuration
 
-All HTTP calls use the same base URL resolution rules:
-
-- an explicit `BaseURL` field wins when provided
-- otherwise `WENOVA_API_URL` is used when set
-- otherwise the default base URL is `https://apimicroservices.wenova.fun`
-
-Example environment value:
-
-```text
-WENOVA_API_URL=https://apimicroservices.wenova.fun
-```
+Set `Wenova.BaseUrl` to customize the API host. If it is empty, the default base URL is `https://apimicroservices.wenova.fun`.
 
 ## Structure
 
 Like `envtools`, `wenova` uses a flat package structure:
 
 - `wenova.go` defines the package type
-- `apiclient.go` holds shared base URL and error helpers
-- `smsotp.go` contains SMS and OTP helpers
-- `address.go` contains address lookup helpers
+- `sms.go` contains SMS helpers
 - `wenova_test.go` covers shared behavior
 
 You can call helpers either from package-level functions or from a `Wenova` value.
 
-## SMS OTP
+## SMS
 
-`SendOtp` sends OTP and SMS package requests to `POST /sms/package`.
+`SendSMS` sends SMS requests to `POST /sms/package`.
 
 ### Request Rules
 
-`SendOtp` requires at least one of:
-
-- `Token`
-- `ScriptID`
-
-If both are missing, it returns an error.
+`SendSMS` requires `Token`. If it is missing, it returns an error.
 
 ### Example
 
 ```go
-result, err := wenova.SendOtp(ctx, wenova.SendOtpRequest{
+result, err := wenova.SendSMS(ctx, wenova.SendSMSRequest{
 	Header:      "WNV-OTP",
 	PhoneNumber: "2012345678",
 	Message:     "Code: 123456",
 	Token:       "your-token",
-	UsePackage:  true,
 })
 ```
-
-### Helpers
-
-The package also includes:
-
-- `ScriptID(string) int64` for parsing a positive script ID from a string
-
-## Address
-
-The address helpers fetch Wenova Link location data for provinces, districts, and villages.
-
-### Options
-
-`Options` supports:
-
-- `PluginKey` for API access
-- `KW` for keyword filtering
-- `Lang` for response language
-- `BaseURL` for overriding the API host
-
-### Available Functions
-
-- `GetProvinces`
-- `GetProvinceById`
-- `GetDistrictsByProvince`
-- `GetDistrictById`
-- `GetVillagesByDistrict`
-- `GetVillageById`
-
-### Example
-
-```go
-districts, err := wenova.GetDistrictsByProvince(ctx, 1, wenova.Options{
-	PluginKey: "your-plugin-key",
-	KW:        "chan",
-	Lang:      "en",
-})
-```
-
-### Validation
-
-The address helpers enforce:
-
-- `PluginKey` must not be empty
-- numeric IDs must be positive
 
 ## Error Behavior
-
-Both request areas:
 
 - return decoded JSON as `any` on success
 - return `nil, nil` for empty successful response bodies
@@ -169,15 +89,11 @@ Run all tests with:
 go test ./...
 ```
 
-The live Wenova address test reads `WENOVA_PLUGIN_KEY`. If it is not set, the test is skipped.
-
-The live Wenova service API test reads:
+The live Wenova SMS test reads:
 
 - `WENOVA_TOKEN`
-- `WENOVA_SCRIPT_ID`
 - `WENOVA_DEMO_PHONE_NUMBER`
 - `WENOVA_DEMO_HEADER` (optional)
 - `WENOVA_DEMO_MESSAGE` (optional)
-- `WENOVA_DEMO_USE_PACKAGE` (optional)
 
-The service test requires `WENOVA_DEMO_PHONE_NUMBER` and at least one of `WENOVA_TOKEN` or `WENOVA_SCRIPT_ID`. `WENOVA_DEMO_USE_PACKAGE` defaults to `false` and should only be enabled when the credential is linked to a valid package. In GitHub Actions, provide these values as repository secrets with the same names.
+The SMS test requires `WENOVA_TOKEN` and `WENOVA_DEMO_PHONE_NUMBER`. In GitHub Actions, provide these values as repository secrets with the same names.

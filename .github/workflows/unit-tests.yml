@@ -19,11 +19,8 @@ jobs:
 
       - name: Run unit tests
         env:
-          WENOVA_PLUGIN_KEY: ${{ secrets.WENOVA_PLUGIN_KEY }}
           WENOVA_TOKEN: ${{ secrets.WENOVA_TOKEN }}
-          WENOVA_SCRIPT_ID: ${{ secrets.WENOVA_SCRIPT_ID }}
           WENOVA_DEMO_PHONE_NUMBER: ${{ secrets.WENOVA_DEMO_PHONE_NUMBER }}
           WENOVA_DEMO_HEADER: ${{ secrets.WENOVA_DEMO_HEADER }}
           WENOVA_DEMO_MESSAGE: ${{ secrets.WENOVA_DEMO_MESSAGE }}
-          WENOVA_DEMO_USE_PACKAGE: ${{ secrets.WENOVA_DEMO_USE_PACKAGE }}
         run: go test ./...
