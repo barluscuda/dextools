@@ -13,6 +13,11 @@ func requiredTrimmedEnv(key string) string {
 	return strings.TrimSpace(os.Getenv(key))
 }
 
+func optionalBoolEnv(key string) bool {
+	v := strings.ToLower(requiredTrimmedEnv(key))
+	return v == "1" || v == "true" || v == "yes"
+}
+
 func TestResolveBaseURL(t *testing.T) {
 	t.Setenv("WENOVA_API_URL", "")
 	if got := ResolveBaseURL(""); got != DefaultBaseURL {
@@ -82,14 +87,15 @@ func TestGetProvincesLive(t *testing.T) {
 }
 
 func TestSendOtpLive(t *testing.T) {
-	token := requiredTrimmedEnv("WENOVA_TOKEN")
-	if token == "" {
-		t.Skip("skipping live Wenova service test: WENOVA_TOKEN is not set")
-	}
-
 	phoneNumber := requiredTrimmedEnv("WENOVA_DEMO_PHONE_NUMBER")
 	if phoneNumber == "" {
 		t.Skip("skipping live Wenova service test: WENOVA_DEMO_PHONE_NUMBER is not set")
+	}
+
+	token := requiredTrimmedEnv("WENOVA_TOKEN")
+	scriptID := ScriptID(requiredTrimmedEnv("WENOVA_SCRIPT_ID"))
+	if token == "" && scriptID == 0 {
+		t.Skip("skipping live Wenova service test: WENOVA_TOKEN or WENOVA_SCRIPT_ID is required")
 	}
 
 	header := requiredTrimmedEnv("WENOVA_DEMO_HEADER")
@@ -110,7 +116,8 @@ func TestSendOtpLive(t *testing.T) {
 		PhoneNumber: phoneNumber,
 		Message:     message,
 		Token:       token,
-		UsePackage:  true,
+		ScriptID:    scriptID,
+		UsePackage:  optionalBoolEnv("WENOVA_DEMO_USE_PACKAGE"),
 	})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

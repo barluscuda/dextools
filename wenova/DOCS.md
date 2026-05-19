@@ -174,8 +174,10 @@ The live Wenova address test reads `WENOVA_PLUGIN_KEY`. If it is not set, the te
 The live Wenova service API test reads:
 
 - `WENOVA_TOKEN`
+- `WENOVA_SCRIPT_ID`
 - `WENOVA_DEMO_PHONE_NUMBER`
 - `WENOVA_DEMO_HEADER` (optional)
 - `WENOVA_DEMO_MESSAGE` (optional)
+- `WENOVA_DEMO_USE_PACKAGE` (optional)
 
-If `WENOVA_TOKEN` or `WENOVA_DEMO_PHONE_NUMBER` is missing, the service test is skipped. In GitHub Actions, provide these values as repository secrets with the same names.
+The service test requires `WENOVA_DEMO_PHONE_NUMBER` and at least one of `WENOVA_TOKEN` or `WENOVA_SCRIPT_ID`. `WENOVA_DEMO_USE_PACKAGE` defaults to `false` and should only be enabled when the credential is linked to a valid package. In GitHub Actions, provide these values as repository secrets with the same names.
