@@ -1,8 +1,11 @@
 package wenowa
 
 import (
+	"context"
+	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestResolveBaseURL(t *testing.T) {
@@ -49,5 +52,26 @@ func TestErrorFromResponseBody(t *testing.T) {
 	err = ErrorFromResponseBody([]byte(`not-json`), 500, "fallback")
 	if err == nil || !strings.Contains(err.Error(), "fallback (HTTP 500)") {
 		t.Fatalf("unexpected fallback error: %v", err)
+	}
+}
+
+func TestGetProvincesLive(t *testing.T) {
+	token := strings.TrimSpace(os.Getenv("WENOWA_TOKEN"))
+	if token == "" {
+		t.Skip("skipping live Wenowa test: WENOWA_TOKEN is not set")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	result, err := GetProvinces(ctx, Options{
+		PluginKey: token,
+		Lang:      "en",
+	})
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result == nil {
+		t.Fatal("expected province response, got nil")
 	}
 }

@@ -61,3 +61,9 @@ go test ./...
 ```
 
 GitHub Actions is configured to run the test suite on `push` and `pull_request`.
+
+Some live integration tests read repository secrets through environment variables:
+
+- `MINECRAFT_MCSERVER_DEMO_IP`
+- `MINECRAFT_MCSERVER_DEMO_PORT`
+- `WENOWA_TOKEN`

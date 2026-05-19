@@ -168,3 +168,5 @@ Run all tests with:
 ```bash
 go test ./...
 ```
+
+The live Wenowa integration test reads `WENOWA_TOKEN`. If it is not set, the test is skipped. In GitHub Actions, provide it as a repository secret with the same name.
