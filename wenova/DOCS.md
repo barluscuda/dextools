@@ -18,10 +18,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	client := wenova.Wenova{
-		BaseUrl: "https://apimicroservices.wenova.fun",
-		Token:   "your-token",
-	}
+	client := wenova.NewWenovaAPI("your-token")
 
 	smsResult, err := client.SendSMS(ctx, wenova.SendSMSRequest{
 		Header:      "WNV-OTP",
@@ -41,10 +38,14 @@ func main() {
 The package currently supports:
 
 - `SendSMS`
+- `NewWenovaAPI`
+- `SysChangeBaseUrl`
 
 ## Configuration
 
-Set `Wenova.BaseUrl` to customize the API host. If it is empty, the default base URL is `https://apimicroservices.wenova.fun`.
+`NewWenovaAPI(token)` creates a client with the default base URL `https://apimicroservices.wenova.fun`.
+
+Use `SysChangeBaseUrl` to customize the API host later.
 
 ## Structure
 
@@ -67,10 +68,8 @@ Call helpers from a configured `Wenova` value.
 ### Example
 
 ```go
-client := wenova.Wenova{
-	BaseUrl: "https://apimicroservices.wenova.fun",
-	Token:   "your-token",
-}
+client := wenova.NewWenovaAPI("your-token")
+client.SysChangeBaseUrl("https://apimicroservices.wenova.fun")
 
 result, err := client.SendSMS(ctx, wenova.SendSMSRequest{
 	Header:      "WNV-OTP",

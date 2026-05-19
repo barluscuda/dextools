@@ -19,6 +19,7 @@ This module currently includes:
 - `dextools` as the unified entry package
 - `envtools` for environment variable loading helpers
 - `minecraft` for Minecraft developer tools
+- `wenova` for Wenova SMS tools
 
 More tools can be added over time without changing the main idea: `dextools` is the umbrella package.
 
@@ -28,6 +29,7 @@ The root package currently exposes these tools today:
 
 - `Env()` for environment variable helpers
 - `MinecraftBE()` for the current Bedrock helper
+- `Wenova()` for the Wenova SMS client
 
 ## Using Subpackages
 
@@ -120,6 +122,42 @@ Current response fields from the Bedrock status helper include:
 - `IPv6Port`
 
 For package-level behavior and examples, see [minecraft/DOCS.md](./minecraft/DOCS.md).
+
+## wenova
+
+The `wenova` package is for Wenova SMS tools.
+
+`Wenova()` returns the Wenova client from that package.
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/barluscuda/dextools"
+	"github.com/barluscuda/dextools/wenova"
+)
+
+func main() {
+	client := dextools.Wenova("your-token")
+	client.SysChangeBaseUrl("https://apimicroservices.wenova.fun")
+
+	result, err := client.SendSMS(context.Background(), wenova.SendSMSRequest{
+		Header:      "WNV-OTP",
+		PhoneNumber: "2012345678",
+		Message:     "Code: 123456",
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(result)
+}
+```
+
+For package-level behavior and examples, see [wenova/DOCS.md](./wenova/DOCS.md).
 
 ## Testing
 

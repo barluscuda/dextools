@@ -13,13 +13,21 @@ func requiredTrimmedEnv(key string) string {
 	return strings.TrimSpace(os.Getenv(key))
 }
 
-func TestSendSMSUsesWenovaBaseURL(t *testing.T) {
-	client := Wenova{BaseUrl: " https://example.com/ ", Token: "demo-token"}
-	if got := strings.TrimSuffix(strings.TrimSpace(client.BaseUrl), "/"); got != "https://example.com" {
-		t.Fatalf("expected trimmed base url, got %q", got)
+func TestNewWenovaAPI(t *testing.T) {
+	client := NewWenovaAPI(" demo-token ")
+	if client.BaseUrl != DefaultBaseURL {
+		t.Fatalf("expected default base url %q, got %q", DefaultBaseURL, client.BaseUrl)
 	}
 	if client.Token != "demo-token" {
 		t.Fatalf("expected token on client, got %q", client.Token)
+	}
+}
+
+func TestSysChangeBaseUrl(t *testing.T) {
+	client := NewWenovaAPI("demo-token")
+	client.SysChangeBaseUrl(" https://example.com/ ")
+	if client.BaseUrl != "https://example.com" {
+		t.Fatalf("expected trimmed base url, got %q", client.BaseUrl)
 	}
 }
 
@@ -59,7 +67,7 @@ func TestSendSMSLive(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	client := Wenova{Token: token}
+	client := NewWenovaAPI(token)
 	result, err := client.SendSMS(ctx, SendSMSRequest{
 		Header:      header,
 		PhoneNumber: phoneNumber,
