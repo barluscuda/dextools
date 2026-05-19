@@ -20,13 +20,13 @@ func main() {
 	ctx := context.Background()
 	client := wenova.Wenova{
 		BaseUrl: "https://apimicroservices.wenova.fun",
+		Token:   "your-token",
 	}
 
 	smsResult, err := client.SendSMS(ctx, wenova.SendSMSRequest{
 		Header:      "WNV-OTP",
 		PhoneNumber: "2012345678",
 		Message:     "Code: 123456",
-		Token:       "your-token",
 	})
 	if err != nil {
 		panic(err)
@@ -54,7 +54,7 @@ Like `envtools`, `wenova` uses a flat package structure:
 - `sms.go` contains SMS helpers
 - `wenova_test.go` covers shared behavior
 
-You can call helpers either from package-level functions or from a `Wenova` value.
+Call helpers from a configured `Wenova` value.
 
 ## SMS
 
@@ -62,16 +62,20 @@ You can call helpers either from package-level functions or from a `Wenova` valu
 
 ### Request Rules
 
-`SendSMS` requires `Token`. If it is missing, it returns an error.
+`SendSMS` requires `Wenova.Token`. If it is missing, it returns an error.
 
 ### Example
 
 ```go
-result, err := wenova.SendSMS(ctx, wenova.SendSMSRequest{
+client := wenova.Wenova{
+	BaseUrl: "https://apimicroservices.wenova.fun",
+	Token:   "your-token",
+}
+
+result, err := client.SendSMS(ctx, wenova.SendSMSRequest{
 	Header:      "WNV-OTP",
 	PhoneNumber: "2012345678",
 	Message:     "Code: 123456",
-	Token:       "your-token",
 })
 ```
 

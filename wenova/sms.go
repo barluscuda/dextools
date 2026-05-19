@@ -17,16 +17,11 @@ type SendSMSRequest struct {
 	Header      string
 	PhoneNumber string
 	Message     string
-	Token       string
-}
-
-// SendSMS POSTs to /sms/package and returns the decoded JSON body.
-func SendSMS(ctx context.Context, req SendSMSRequest) (any, error) {
-	return Wenova{}.SendSMS(ctx, req)
 }
 
 func (w Wenova) SendSMS(ctx context.Context, req SendSMSRequest) (any, error) {
-	if strings.TrimSpace(req.Token) == "" {
+	token := strings.TrimSpace(w.Token)
+	if token == "" {
 		return nil, errors.New("token is required")
 	}
 
@@ -40,7 +35,7 @@ func (w Wenova) SendSMS(ctx context.Context, req SendSMSRequest) (any, error) {
 		"header":      req.Header,
 		"phoneNumber": req.PhoneNumber,
 		"message":     req.Message,
-		"token":       strings.TrimSpace(req.Token),
+		"token":       token,
 	}
 
 	raw, err := json.Marshal(body)

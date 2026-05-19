@@ -14,9 +14,12 @@ func requiredTrimmedEnv(key string) string {
 }
 
 func TestSendSMSUsesWenovaBaseURL(t *testing.T) {
-	client := Wenova{BaseUrl: " https://example.com/ "}
+	client := Wenova{BaseUrl: " https://example.com/ ", Token: "demo-token"}
 	if got := strings.TrimSuffix(strings.TrimSpace(client.BaseUrl), "/"); got != "https://example.com" {
 		t.Fatalf("expected trimmed base url, got %q", got)
+	}
+	if client.Token != "demo-token" {
+		t.Fatalf("expected token on client, got %q", client.Token)
 	}
 }
 
@@ -56,11 +59,11 @@ func TestSendSMSLive(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	result, err := SendSMS(ctx, SendSMSRequest{
+	client := Wenova{Token: token}
+	result, err := client.SendSMS(ctx, SendSMSRequest{
 		Header:      header,
 		PhoneNumber: phoneNumber,
 		Message:     message,
-		Token:       token,
 	})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
