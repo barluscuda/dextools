@@ -131,9 +131,13 @@ go test ./...
 
 GitHub Actions is configured to run the test suite on `push` and `pull_request`.
 
-The live Bedrock status test reads these environment variables:
+Some live integration tests read repository secrets through environment variables:
 
 - `MINECRAFT_MCSERVER_DEMO_IP`
 - `MINECRAFT_MCSERVER_DEMO_PORT`
+- `WENOVA_TOKEN`
+- `WENOVA_DEMO_PHONE_NUMBER`
+- `WENOVA_DEMO_HEADER`
+- `WENOVA_DEMO_MESSAGE`
 
-In GitHub Actions, set them as repository secrets with the same names. When they are not set, the live Bedrock test is skipped.
+In GitHub Actions, set these as repository secrets with the same names. When they are not set, the corresponding live tests are skipped.
