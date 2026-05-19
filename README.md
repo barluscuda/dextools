@@ -29,7 +29,7 @@ The root package currently exposes these tools today:
 
 - `Env()` for environment variable helpers
 - `MinecraftBE()` for the current Bedrock helper
-- `Wenova()` for the Wenova SMS client
+- `WenovaAPI(token)` for the Wenova SMS client
 
 ## Using Subpackages
 
@@ -127,7 +127,7 @@ For package-level behavior and examples, see [minecraft/DOCS.md](./minecraft/DOC
 
 The `wenova` package is for Wenova SMS tools.
 
-`Wenova()` returns the Wenova client from that package.
+`WenovaAPI(token)` returns the Wenova client from that package.
 
 ```go
 package main
@@ -141,7 +141,7 @@ import (
 )
 
 func main() {
-	client := dextools.Wenova("your-token")
+	client := dextools.WenovaAPI("your-token")
 	client.SysChangeBaseUrl("https://apimicroservices.wenova.fun")
 
 	result, err := client.SendSMS(context.Background(), wenova.SendSMSRequest{
