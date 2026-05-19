@@ -130,3 +130,10 @@ go test ./...
 ```
 
 GitHub Actions is configured to run the test suite on `push` and `pull_request`.
+
+The live Bedrock status test reads these environment variables:
+
+- `MINECRAFT_MCSERVER_DEMO_IP`
+- `MINECRAFT_MCSERVER_DEMO_PORT`
+
+In GitHub Actions, set them as repository secrets with the same names. When they are not set, the live Bedrock test is skipped.

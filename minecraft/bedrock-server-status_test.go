@@ -3,17 +3,34 @@ package minecraft
 import (
 	"bytes"
 	"encoding/binary"
+	"os"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
 )
 
 func TestBedrockServerStatus(t *testing.T) {
+	host := os.Getenv("MINECRAFT_MCSERVER_DEMO_IP")
+	if host == "" {
+		t.Skip("skipping live Bedrock status test: MINECRAFT_MCSERVER_DEMO_IP is not set")
+	}
+
+	portValue := os.Getenv("MINECRAFT_MCSERVER_DEMO_PORT")
+	if portValue == "" {
+		t.Skip("skipping live Bedrock status test: MINECRAFT_MCSERVER_DEMO_PORT is not set")
+	}
+
+	port, err := strconv.Atoi(portValue)
+	if err != nil {
+		t.Fatalf("invalid MINECRAFT_MCSERVER_DEMO_PORT %q: %v", portValue, err)
+	}
+
 	b := &Bedrock{
 		Timeout: 5 * time.Second,
 	}
 
-	status, err := b.ServerStatus("play.nethergames.org", 19132)
+	status, err := b.ServerStatus(host, port)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

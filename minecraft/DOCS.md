@@ -115,3 +115,10 @@ Common error cases:
 ## Testing
 
 Unit tests for the Bedrock status client live in [bedrock-server-status_test.go](./bedrock-server-status_test.go).
+
+The live server-status test reads:
+
+- `MINECRAFT_MCSERVER_DEMO_IP`
+- `MINECRAFT_MCSERVER_DEMO_PORT`
+
+If either variable is missing, that live test is skipped. In GitHub Actions, provide them through repository secrets with the same names.
